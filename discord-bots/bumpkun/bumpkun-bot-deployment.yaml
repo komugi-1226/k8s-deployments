@@ -26,7 +26,7 @@ spec:
                       - oracle
       containers:
         - name: bumpkun
-          image: ghcr.io/komugi-1226/bumpkun.v2:edge
+          image: ghcr.io/mo-tomi/bumpkun.v2:edge
           imagePullPolicy: Always
           envFrom:
             - secretRef:
