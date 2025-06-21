@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bumpkun
+  labels:
+    app: bumpkun
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bumpkun
+  template:
+    metadata:
+      labels:
+        app: bumpkun
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: topology.kubernetes.io/zone
+                    operator: NotIn
+                    values:
+                      - oracle
+      containers:
+        - name: bumpkun
+          image: ghcr.io/komugi-1226/bumpkun.v2:edge
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: bumpkun-token
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault
+      tolerations:
+        - key: "low-spec"
+          operator: "Exists"
+          effect: "NoExecute"
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 0
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 0
