@@ -30,7 +30,7 @@ spec:
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: bumpkun-token
+                name: bumpkun-secret
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
